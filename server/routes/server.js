@@ -3,7 +3,6 @@ const router = express.Router();
 const characters = require('../data/characters.json');
 
 // Logic for the Character of the Day
-// Currently just random each time the server launches
 //let hiddenCharacter = characters[Math.floor(Math.random() * characters.length)]; // Fully Random each time the server starts
 
 
@@ -11,7 +10,7 @@ const characters = require('../data/characters.json');
 // set constant date at load
 const now = Date.now();
 console.log('date now: ', now);
-// now MOD 86400000 (24hrs in millis) = no. of millis since midnight
+// date.now MOD 86400000 (24hrs in millis) = no. of millis since midnight
 const sinceMidnight = now % 86400000;
 console.log('ms since midnight: ', sinceMidnight);
 // now - no. of millis = time at midnight (always the same value until the next day)
@@ -29,7 +28,7 @@ console.log('Character of the Day: ', hiddenCharacter);
 // new plan
 
 // fill an array with numbers 1 - characters.length
-// for each character give them an ID value
+// for each character give them an ID integer
 // get a random number between 1 and array length
 // give the next character the id in this array slot
 // remove said array slot
@@ -42,6 +41,7 @@ console.log('Character of the Day: ', hiddenCharacter);
 // as the order i add characters to the json will likely be obvious (alphabetical or by series), so players would have a chance to be able to guess based on the previous days character
 
 
+// Determine daily character via a unique ID that changes daily (IdOfTheDay)
 const getHiddenCharacter = () => {
     // Determine # of days since midnight at the start of 1970
     const epoch = Math.floor(Date.now() / 86400000);
@@ -60,17 +60,17 @@ const getHiddenCharacter = () => {
         }
     });
 
+    // Fail State, default to first entry (Ash Ketchum)
     if (characterOfTheDay === null) {
         characterOfTheDay = characters[0];
     }
+
+    // Return Character
     console.log('Character of the Day', characterOfTheDay);
     return characterOfTheDay;
 }
 
-router.get('/character', (req, res) => {
-    res.json({ message: "Guess the hidden character!" });
-});
-
+// Handle Player Guesses
 router.post('/guess', (req, res) => {
     const { name } = req.body;
     const guessedCharacter = characters.find(char => char.name.toLowerCase() === name.toLowerCase());
@@ -85,10 +85,12 @@ router.post('/guess', (req, res) => {
     console.log('Guessed Character: ', guessedCharacter);
     console.log('Hidden Character: ', hiddenCharacter);
 
+    // Compare guessed character to the hidden/correct character
+    // Could likely be simplified
     const comparison = {
+        img: guessedCharacter.img, // Image does not need a comparison
         name: guessedCharacter.name,
         name_match: guessedCharacter.name === hiddenCharacter.name,
-        img: guessedCharacter.img,
         gender: guessedCharacter.gender,
         gender_match: guessedCharacter.gender === hiddenCharacter.gender,
         eye_colour: guessedCharacter.eye_colour,
@@ -104,10 +106,13 @@ router.post('/guess', (req, res) => {
         // add more attributes as needed
     };
 
+    // Determine whether the guess is correct or not 
+    // Currently I don't forsee any duplicate name entries, but this could be changed to a more unique value if the problem arises
     if (guessedCharacter.name === hiddenCharacter.name) {
         comparison.correct = true;
     }
 
+    // Return the comparison data
     res.json(comparison);
 });
 
@@ -117,6 +122,8 @@ router.post('/generateNewIds', (req, res) => {
     return response;
 });
 
+// Generate random Ids for each character in characters.json
+// Prevents sequential days from having sequential characters
 const generateNewIds = () => {
     let availableIds = [];
     let i = 0;
@@ -129,28 +136,29 @@ const generateNewIds = () => {
     });
     console.log('available ids array: ', availableIds);
 
-    // Loop again to assign a new ID to each character
+    // Loop each character and assign them a random ID from the availableIds array
     characters.forEach(char => {
-        const next = Math.floor(Math.random() * availableIds.length);
-        const newId = availableIds[next];
-        char.id = newId;
+        const next = Math.floor(Math.random() * availableIds.length); // Determine a random value from the array length
+        const newId = availableIds[next]; // Get the Id stored at the array entry
+        char.id = newId; // Assign the new Id
         console.log(`Added ${newId} id to ${char.name}`);
 
-        availableIds = availableIds.filter(id => id != newId);
+        availableIds = availableIds.filter(id => id != newId); // Remove used Id from array
         console.log(`id ${newId} removed from available Ids: `, availableIds);
     });
     console.log('new characters json:', characters);
 
-    hiddenCharacter = getHiddenCharacter();
+    hiddenCharacter = getHiddenCharacter(); // Determine a new hidden character as the IdOfTheDay will not have changed however it will be associated with a new character
 
     const success = true;
     return success;
 };
 
 // Generate New IDs for each character when the server starts
-// This randomises the order in which the characters appear to avoid players' pattern recognition
+// This randomises the order in which the characters appear to avoid pattern recognition
 generateNewIds();
 
+// Reveal the answer, used for debugging
 router.post('/reveal', (req, res) => {
     const hiddenChar = getHiddenCharacter();
 

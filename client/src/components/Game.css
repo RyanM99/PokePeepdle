@@ -30,7 +30,7 @@ html {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(8,1fr); /* 7 Columns for each attribute */
+    grid-template-columns: repeat(7,1fr); /* 7 Columns for each attribute */ /* Make 8 when character images are working */
     gap: 10px;
     background-color: #2196F3;
     padding: 10px;

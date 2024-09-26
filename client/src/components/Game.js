@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './Game.css';
 
@@ -6,7 +6,7 @@ const Game = () => {
     const [guess, setGuess] = useState('');
     const [guesses, setGuesses] = useState([]);
     const [result, setResult] = useState(null);
-    const [revealedChar, setRevealedChar] = useState(null);
+    //const [revealedChar, setRevealedChar] = useState(null); // Variable for debugging
 
     const handleGuess = async () => {
         try {
@@ -23,14 +23,14 @@ const Game = () => {
         }
     };
 
-    const generateIds = async () => {
+    ///// Debugging Functions /////
+    /*const generateIds = async () => {
         try {
             await axios.post('http://localhost:5000/api/game/generateNewIds');
         } catch (error) {
             console.error(error);
         }
     }
-
     const revealHiddenCharacter = async () => {
         try {
             const response = await axios.post('http://localhost:5000/api/game/reveal');
@@ -38,15 +38,18 @@ const Game = () => {
         } catch (error) {
             console.error(error);
         }
-    }
+    }*/
 
 
     return (
         <div className='game'>
             <h1>PokePeepdle</h1>
+
+            {/* Debugging Buttons */}
             {/*<button className="newCharacter" onClick={generateIds}>&#8634;</button>*/}
             {/*<button className="reveal" onClick={revealHiddenCharacter}>Reveal</button>*/}
-            
+
+            {/* Guess Field */}
             <input
                 type="text"
                 value={guess}
@@ -55,14 +58,18 @@ const Game = () => {
             />
             <button onClick={handleGuess}>Guess</button>
 
+            {/* More Debugging */}
             {/*{revealedChar && (*/}
             {/*    <div>{revealedChar.name}</div>*/}
             {/*)}*/}
-            {result && result.correct && <div style={{ color: 'green' }}>Congratulations! You guessed it right.</div>}
+
+            {/* Results */}
+            {result && result.correct && <div style={{ color: 'green', fontWeight: 'bold', fontSize: '26px' }}>Congratulations! You guessed it right.</div>}
             {result && result.error && <div style={{ color: 'red' }}>{result.error}</div>}
 
+            {/* Headers */}
             <div className="grid-container">
-                <div className="header Image">Image</div>
+                {/*<div className="header Image">Image</div>*/} {/* Remove character images until fixed */}
                 <div className="header name">Name</div>
                 <div className="header gender">Gender</div>
                 <div className="header eye-colour">Eye Colour</div>
@@ -74,18 +81,18 @@ const Game = () => {
                 {/* Map over guesses to display them */}
                 {guesses.map((guessObj, index) => (
                     <React.Fragment key={index}>
-                        <div className="img">
-                            <img
-                                src={guessObj.data.img}
-                                alt={guessObj.data.name}
-                                style={{
-                                    width: `100px`,
-                                    maxWidth: '100%',
-                                    height: 'auto',
-                                    color: 'black',
-                                }}
-                            />
-                        </div>
+                        {/*<div className="img">*/}
+                            {/*<img*/} {/* Remove character images until fixed */}
+                            {/*    src={guessObj.data.img}*/}
+                            {/*    alt={guessObj.data.name}*/}
+                            {/*    style={{*/}
+                            {/*        width: `100px`,*/}
+                            {/*        maxWidth: '100%',*/}
+                            {/*        height: 'auto',*/}
+                            {/*        color: 'black',*/}
+                            {/*    }}*/}
+                            {/*/>*/}
+                        {/*</div>*/}
                         <div className="name" style={{ color: guessObj.data.name_match ? 'green' : 'red' }}>{guessObj.data.name}</div>
                         <div className="gender" style={{ color: guessObj.data.gender_match ? 'green' : 'red' }}>{guessObj.data.gender}</div>
                         <div className="eye-colour" style={{ color: guessObj.data.eye_colour_match ? 'green' : 'red' }}>{guessObj.data.eye_colour}</div>
@@ -96,6 +103,9 @@ const Game = () => {
                     </React.Fragment>
                 ))}
             </div>
+
+
+            {/* Unprofessional To-do list */}
             <div style={{ color: 'white' }}>
                 <div>To Do:</div>
                 <div>Make correct guess a popup</div>
