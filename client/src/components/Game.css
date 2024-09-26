@@ -1,0 +1,50 @@
+.game {
+    color: red;
+    background-color: #313146;
+    border: 2px solid black;
+    border-top: 2px solid red;
+    border-bottom: 2px solid white;
+    padding: 10px 0 62vh;
+}
+
+.newCharacter {
+    color: white;
+    background-color: red;
+    position: page;
+    bottom: 5%;
+    padding: 2px;
+    border: 0;
+}
+
+html {
+    background-color: #313146;
+}
+
+.results {
+    display: flex;
+    position: center;
+    text-align: left;
+    max-height: auto;
+    width: auto;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(8,1fr); /* 7 Columns for each attribute */
+    gap: 10px;
+    background-color: #2196F3;
+    padding: 10px;
+}
+
+.grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+.header {
+    font-weight: bold;
+    background-color: #ffcc00;
+    color: black;
+}

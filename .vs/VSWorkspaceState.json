@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\client",
+    "\\client\\src",
+    "\\client\\src\\components",
+    "\\server",
+    "\\server\\data",
+    "\\server\\routes"
+  ],
+  "SelectedNode": "\\server\\routes\\game.js",
+  "PreviewInSolutionExplorer": false
+}
